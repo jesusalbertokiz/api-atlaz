@@ -1,20 +1,29 @@
-import "./load-env-vars";
+import { config as dotEnvConfig } from "dotenv";
+dotEnvConfig();
 
+import bodyParser from "body-parser";
 import express from "express";
+import morgan from "morgan";
 
 import { config } from "./config";
-import { healthRouter } from "./health/health-router";
+import { userRouter } from "./user/infrastructure/http/user-router";
+import { authRouter } from "./auth/infrastructure/http/auth-router";
+import { postRouter } from "./posts/infrastructure/http/post-router";
+import { comentariosRouter } from "./comentarios/infrastructure/http/comentarios-router";
 
 function boostrap() {
   const app = express();
-
-  app.use(express.json());
-  app.use("/health", healthRouter);
+  app.use(morgan("dev"));
+  app.use(bodyParser.json());
+  app.use("/auth", authRouter);
+  app.use("/users", userRouter);
+  app.use("/post", postRouter);
+  app.use("/comentarios", comentariosRouter);
 
   const { port } = config.server;
 
   app.listen(port, () => {
-    console.log(`[APP] - Started application on port ${port}`);
+    console.log(`[APP] - Starting application on port ${port}`);
   });
 }
 
