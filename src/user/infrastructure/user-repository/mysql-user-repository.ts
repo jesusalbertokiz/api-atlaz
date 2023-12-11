@@ -3,9 +3,9 @@ import { UserRepository } from "../../domain/user-repository";
 import { data } from "./userDatabase";
 
 export class MySQLUserRepository implements UserRepository {
-  async getById(id: string): Promise<User | null> {
-    const rawUser = data.find(user => user.id === id);
-    return rawUser ? new User(rawUser.id, rawUser.name) : null;
+  async getById(id: string, role: string): Promise<boolean> {
+    const rawUser = data.find(user => user.id === id && user.role === role);
+    return rawUser ? true : false;
   }
   async getByName(name: string): Promise<User | null> {
     const rawUser = data.find(user => user.name === name);

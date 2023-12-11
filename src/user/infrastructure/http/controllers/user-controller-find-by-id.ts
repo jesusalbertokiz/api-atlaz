@@ -7,14 +7,19 @@ export class UserController {
   constructor(private readonly userFindById: UserFindById) {}
 
   async run(req: Request, res: Response) {
-    const { id } = req.params;
+    const { id, role } = req.body;
 
     try {
-      const user = await this.userFindById.run(id);
-      return res.status(200).json(user);
+      const user = await this.userFindById.run(id, role);
+
+      if (!user) {
+        throw new UserNotFound(id);
+      }
+
+      return res.status(200).json("ok");
     } catch (error) {
       if (error instanceof UserNotFound) {
-        return res.status(404).json();
+        return res.status(404).json("Usuario no encontrado");
       }
 
       return res.status(500).json();

@@ -18,6 +18,6 @@ export const data = [
     name: "Jesus",
     email: "jesus@atlaz.vip",
     pass: "123",
-    role: "admin",
+    role: "vip",
   },
 ];
