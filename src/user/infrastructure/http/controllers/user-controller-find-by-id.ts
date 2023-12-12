@@ -16,13 +16,14 @@ export class UserController {
         throw new UserNotFound(id);
       }
 
-      return res.status(200).json("ok");
+      return res.status(200);
     } catch (error) {
       if (error instanceof UserNotFound) {
-        return res.status(404).json("Usuario no encontrado");
+        return res.status(404);
       }
+      console.log(error);
 
-      return res.status(500).json();
+      return res.status(500);
     }
   }
 }

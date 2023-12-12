@@ -1,23 +1,13 @@
-export const data = [
-  {
-    id: "1",
-    name: "juan",
-    email: "juan@atlaz.vip",
-    pass: "123",
-    role: "usuario",
-  },
-  {
-    id: "2",
-    name: "pepe",
-    email: "pepe@atlaz.vip",
-    pass: "123",
-    role: "vip",
-  },
-  {
-    id: "3",
-    name: "Jesus",
-    email: "jesus@atlaz.vip",
-    pass: "123",
-    role: "vip",
-  },
-];
+import { createPool, Pool } from "mysql2/promise";
+
+export async function connect(): Promise<Pool> {
+  const connection = await createPool({
+    host: "localhost",
+    user: "root",
+    password: "123456",
+    database: "atlaz_api",
+    port: 3010,
+    connectionLimit: 10,
+  });
+  return connection;
+}
