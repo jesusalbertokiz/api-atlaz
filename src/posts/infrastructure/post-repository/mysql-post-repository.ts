@@ -1,11 +1,32 @@
-import { Post } from "../../domain/post";
 import { PostRepository } from "../../domain/post-repository";
-import { data } from "./postDatabase";
+import { connect } from "./postDatabase";
+import { RowDataPacket } from "mysql2";
 
 export class MySQLPostRepository implements PostRepository {
-  async getById(id: string): Promise<Post | null> {
-    const rawPost = data.find(post => post.id === id);
+  async getById(id: string): Promise<boolean> {
+    const connection = await connect();
+    const [rows] = await connection.execute<RowDataPacket[]>(
+      "SELECT COUNT(*) as count FROM post WHERE id = ?;",
+      [id],
+    );
 
-    return rawPost ? new Post(rawPost.id, rawPost.visibility) : null;
+    const count = rows[0].count;
+
+    await connection.end();
+
+    return count > 0;
+  }
+  async postOwnUser(id: string, idUser: string): Promise<boolean> {
+    const connection = await connect();
+    const [rows] = await connection.execute<RowDataPacket[]>(
+      "SELECT COUNT(*) as count FROM post WHERE id = ? AND idUser = ?;",
+      [id, idUser],
+    );
+
+    const count = rows[0].count;
+
+    await connection.end();
+
+    return count > 0;
   }
 }
